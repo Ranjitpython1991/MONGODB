@@ -30,24 +30,34 @@ def TEST() :
 
 def insert_records() :
    
-    #user={"Name":"aa","last_name":"bb"}
+    #user=[ { '_id': 19, 'item': "large box", 'qty': 20 }]
     user=request.get_json()
-    dbRespone=db.users.insert_one(user)
-    print(dbRespone.inserted_id)
-    output = {'Status': 'Successfully Inserted',
+    print(user)
+    print(type(user))
+    if type(user)== dict :
+        dbRespone=db.users.insert_one(user)
+        print(dbRespone.inserted_id)
+        output = {'Status': 'Successfully Inserted',
                   'Document_ID': str(dbRespone.inserted_id)}
-    return output
+        return output
+    else :
+     dbRespone=db.users.insert_many(user)
+     output = {'Status': 'Successfully Inserted',
+                  'Document_ID': str(dbRespone.inserted_ids)}
+     return output
 ####################3
 
 @app.route("/search", methods=["GET","POST"])
 
 def search_records() :
    
-    user={"Name":"aa"}
+    #user={"Name":"vikas"}
     user=request.get_json()
     dbRespone=db.users.find(user)
-    print(dbRespone.inserted_id)
-    return ''
+    #output = [{item: data[item] for item in data if item != '_id'} for data in dbRespone]
+    for i in dbRespone :
+        print(i)
+    return i 
 ####################3
 
 if __name__== "__main__" :
